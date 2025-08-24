@@ -12,9 +12,9 @@ function filtrarReglas() {
   });
 }
 
-// ======== CRUD via Netlify Functions (Neon) ========
+// ======== CRUD via Netlify Functions ========
 
-// Insertar nuevo usuario desde JS (opcional; el formulario HTML ya POSTea a /register)
+// Insertar nuevo usuario (usa la function /register)
 async function agregarMiembro(nombre, peso, correo, contrasena) {
   try {
     const res = await fetch('/register', {
@@ -26,13 +26,14 @@ async function agregarMiembro(nombre, peso, correo, contrasena) {
       const err = await res.text();
       throw new Error(err);
     }
+    console.log("Registro agregado al leaderboard.");
     await obtenerMiembros(); // refresca leaderboard
   } catch (err) {
-    console.error('Error insertando en Neon:', err);
+    console.error('Error insertando en Neon vía Netlify:', err);
   }
 }
 
-// Obtener lista de miembros (Nombre, Peso) desde función serverless
+// Obtener lista de miembros desde la function /members
 async function obtenerMiembros() {
   try {
     const res = await fetch('/members');
@@ -40,36 +41,7 @@ async function obtenerMiembros() {
     const miembros = await res.json();
     renderLeaderboard(miembros);
   } catch (err) {
-    console.error('Error consultando Neon:', err);
-  }
-}
-
-
-// Insertar nuevo usuario
-async function agregarMiembro(nombre, peso, correo, passwordHash) {
-  try {
-    await window.sql`
-      INSERT INTO "Usuarios" ("Nombre", "Correo", "Peso", "PasswordHash")
-      VALUES (${nombre}, ${correo}, ${peso}, ${passwordHash})
-    `;
-    console.log("Usuario insertado en Neon!");
-    await obtenerMiembros(); // refresca leaderboard
-  } catch (err) {
-    console.error("Error insertando en Neon:", err);
-  }
-}
-
-// Consultar usuarios ordenados por peso
-async function obtenerMiembros() {
-  try {
-    const filas = await window.sql`
-      SELECT "Id", "Nombre", "Peso"
-      FROM "Usuarios"
-      ORDER BY "Peso" DESC
-    `;
-    renderLeaderboard(filas);
-  } catch (err) {
-    console.error("Error consultando Neon:", err);
+    console.error('Error consultando Neon vía Netlify:', err);
   }
 }
 
@@ -95,13 +67,7 @@ function renderLeaderboard(members) {
 
 // Inicializar al cargar
 document.addEventListener("DOMContentLoaded", () => {
-  try {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("ok") === "1") {
-      console.log("Registro agregado al leaderboard.");
-    }
-  } catch (e) {}
-  obtenerMiembros(); // carga datos reales de Neon al inicio
+  obtenerMiembros(); // carga datos al inicio desde Netlify Functions
 });
 
 // Exponer funciones si se necesitan globalmente
