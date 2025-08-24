@@ -1,0 +1,8 @@
+
+CREATE TABLE IF NOT EXISTS "Usuarios" (
+    "Id" SERIAL PRIMARY KEY,
+    "Nombre" VARCHAR(100) NOT NULL,
+    "Correo" VARCHAR(150) UNIQUE NOT NULL,
+    "Peso" INT NOT NULL,
+    "PasswordHash" VARCHAR(255) NOT NULL
+);

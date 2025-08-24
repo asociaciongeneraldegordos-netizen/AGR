@@ -1,0 +1,12 @@
+@model AGR_Web.Models.Usuario
+@{
+    ViewData["Title"] = "Perfil";
+}
+<h2>Bienvenido @Model.Nombre</h2>
+<p>Correo: @Model.Correo</p>
+<p>Peso: @Model.Peso</p>
+
+<form asp-action="Logout" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit">Cerrar sesión</button>
+</form>

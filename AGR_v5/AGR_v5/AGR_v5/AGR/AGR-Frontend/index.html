@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGR - Asociación General de Gordos</title>
+  <link rel="stylesheet" href="./CSS/style-index.css" />
+</head>
+
+<script type="module">
+  import { neon, neonConfig } from "https://cdn.jsdelivr.net/npm/@neondatabase/serverless@1/+esm";
+  neonConfig.fetchConnectionCache = true; // mejora rendimiento en navegador
+
+  // Usa el usuario LIMITADO que creaste
+  const connectionString = "postgresql://neondb_owner:npg_HC59dhDRaMyA@ep-wild-firefly-ae0zklgx-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require";
+
+  // Crea el cliente y expónlo globalmente
+  window.sql = neon(connectionString);
+
+  // Prueba rápida: ver hora del servidor en la consola
+  (async () => {
+    try {
+      const rows = await window.sql`select now()`;
+      console.log("Neon OK:", rows);
+    } catch (e) {
+      console.error("Error conectando a Neon:", e);
+    }
+  })();
+</script>
+
+<body>
+    <header>
+        <div class="logo-text">
+            <img src="./Images/LogoAgr_Horizontal.png" alt="AGR-Logo">
+            <p><strong>AGR</strong> - Asociación General de Gordos</p>
+        </div>
+        <nav>
+            <a href="./index.html">Inicio</a>
+            <a href="./Pages/rules.html">Reglas</a>
+        </nav>
+        <nav>
+            <a href="./Login/login.html">login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio">
+            <h2 class="mision-vision">Misión y Visión</h2>
+            <div class="mision-vision-container">
+                <div class="mision-box">
+                    <h3>Misión</h3>
+                    <p>Promover la inclusión, salud y bienestar de las personas con contextura grande, fomentando el respeto, la comunidad y la representación.</p>
+                </div>
+                <div class="vision-box">
+                    <h3>Visión</h3>
+                    <p>Ser una organización reconocida a nivel nacional por empoderar a personas grandes, inspirar autoestima y luchar contra la discriminación corporal.</p>
+                </div>
+            </div>
+            
+            <h2>Leaderboard - Miembros Destacados</h2>
+            <table class="leaderboard">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Peso</th>
+                    </tr>
+                </thead>
+                                <tbody id="leaderboard-body">
+                    <!-- Filas generadas dinámicamente -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AGR - Asociación General de Gordos. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

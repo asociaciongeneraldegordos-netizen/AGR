@@ -1,0 +1,7 @@
+CREATE DATABASE AGR_DB
+
+CREATE TABLE Miembros (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Nombre NVARCHAR(100),
+    Peso INT
+);

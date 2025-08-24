@@ -1,0 +1,13 @@
+[build]
+  publish = "AGR_v5/AGR_v5/AGR_v5/AGR/AGR-Frontend"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/register"
+  to = "/.netlify/functions/register"
+  status = 200
+
+[[redirects]]
+  from = "/members"
+  to = "/.netlify/functions/members"
+  status = 200
