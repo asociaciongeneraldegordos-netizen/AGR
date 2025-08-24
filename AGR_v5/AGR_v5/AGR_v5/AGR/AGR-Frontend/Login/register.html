@@ -1,38 +1,42 @@
-
 <body style="background-image: url(../Images/Gordo_Barbudo.png);">
-  <form action="/register" method="POST">
-  <input type="text" name="nombre" placeholder="Nombre" required />
-  <input type="email" name="correo" placeholder="Correo" required />
-  <input type="number" name="peso" placeholder="Peso (kg)" required />
-  <input type="password" name="contrasena" placeholder="Contrasena" required />
-  <button type="submit">Registrarse</button>
+  <form id="registerForm" method="POST">
+    <input type="text" name="nombre" placeholder="Nombre" required />
+    <input type="email" name="correo" placeholder="Correo" required />
+    <input type="number" name="peso" placeholder="Peso (kg)" required />
+    <input type="password" name="contrasena" placeholder="Contrasena" required />
+    <button type="submit">Registrarse</button>
   </form>
 
-<script>
-// AGR - registro local para Leaderboard
-(function(){
-  function loadMembers(){
+  <script>
+  const form = document.getElementById("registerForm");
+  form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+
+    const data = {
+      nombre: form.nombre.value,
+      correo: form.correo.value,
+      peso: form.peso.value,
+      contrasena: form.contrasena.value
+    };
+
     try {
-      const raw = localStorage.getItem("miembros");
-      const p = raw ? JSON.parse(raw) : [];
-      return Array.isArray(p) ? p : [];
-    } catch(e){ return []; }
-  }
-  function saveMembers(m){ try { localStorage.setItem("miembros", JSON.stringify(m)); } catch(e){} }
-  var form = document.querySelector("form");
-  if(form){
-    form.addEventListener("submit", function(ev){
-      ev.preventDefault();
-      var nombre = form.querySelector('[name="nombre"]')?.value || "";
-      var peso = Number(form.querySelector('[name="peso"]')?.value || 0);
-      var miembros = loadMembers();
-      miembros.push({ nombre: String(nombre).trim(), peso: isNaN(peso)?0:peso });
-      miembros.sort(function(a,b){ return (b.peso||0)-(a.peso||0); });
-      saveMembers(miembros);
-      // Redirigir al index mostrando ok=1
+      const res = await fetch("/.netlify/functions/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        alert("Error en registro: " + err);
+        return;
+      }
+
+      // Si todo salió bien → ir al index con ?ok=1
       window.location.href = "../index.html?ok=1";
-    });
-  }
-})();
-</script>
+    } catch (err) {
+      alert("Fallo la conexión con el servidor: " + err.message);
+    }
+  });
+  </script>
 </body>
